@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { Tabs } from 'expo-router';
 import React from 'react';
 
@@ -23,7 +24,17 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home ja',
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: Colors.surface,
+          },
+          headerTitle: () => (
+            <Image
+              source={require('@/assets/images/uncovr-logo.png')}
+              style={{ width: 120, height: 30 }}
+              contentFit="contain"
+            />
+          ),
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
