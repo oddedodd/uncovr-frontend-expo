@@ -4,16 +4,16 @@ import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import { Colors, Fonts } from '@/constants/theme';
 
 export default function SearchScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#C0C0C0', dark: '#404040' }}
+      headerBackgroundColor={Colors.border}
       headerImage={
         <IconSymbol
           size={310}
-          color="#808080"
+          color={Colors.mutedText}
           name="magnifyingglass"
           style={styles.headerImage}
         />
@@ -41,7 +41,7 @@ export default function SearchScreen() {
 
 const styles = StyleSheet.create({
   headerImage: {
-    color: '#808080',
+    color: Colors.mutedText,
     bottom: -90,
     left: -35,
     position: 'absolute',
