@@ -2,4 +2,5 @@ export const API_BASE_URL = 'https://uncovr-backend-laravel-main-kbqgut.laravel.
 
 export const API_ENDPOINTS = {
   releases: '/releases',
+  featuredReleases: '/releases/featured',
 } as const;
