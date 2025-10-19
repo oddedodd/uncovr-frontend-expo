@@ -5,8 +5,10 @@ import { Release, getFeaturedReleases, getReleases } from '@/api';
 import { FeaturedReleasesCarousel } from '@/components/featured-releases-carousel';
 import { LatestReleasesGrid } from '@/components/latest-releases-grid';
 import { Colors } from '@/constants/theme';
+import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 
 export default function HomeScreen() {
+  const { isAuthenticated, isLoading } = useProtectedRoute();
   const [featuredReleases, setFeaturedReleases] = useState<Release[]>([]);
   const [latestReleases, setLatestReleases] = useState<Release[]>([]);
   const [featuredLoading, setFeaturedLoading] = useState(true);
@@ -38,6 +40,11 @@ export default function HomeScreen() {
       setLatestLoading(false);
     }
   };
+
+  // Don't render content if not authenticated
+  if (isLoading || !isAuthenticated) {
+    return null;
+  }
 
 
   return (

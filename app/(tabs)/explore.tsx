@@ -8,8 +8,15 @@ import { ThemedView } from '@/components/themed-view';
 import { Collapsible } from '@/components/ui/collapsible';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors, Fonts } from '@/constants/theme';
+import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 
 export default function TabTwoScreen() {
+  const { isAuthenticated, isLoading } = useProtectedRoute();
+
+  // Don't render content if not authenticated
+  if (isLoading || !isAuthenticated) {
+    return null;
+  }
   return (
     <ParallaxScrollView
       headerBackgroundColor={Colors.border}

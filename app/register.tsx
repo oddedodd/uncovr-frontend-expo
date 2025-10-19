@@ -16,24 +16,41 @@ import {
 import { Colors } from '@/constants/theme';
 import { useAuth } from '@/contexts/AuthContext';
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { register } = useAuth();
 
-  const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert('Error', 'Please enter both email and password');
+  const handleRegister = async () => {
+    if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters long');
       return;
     }
 
     try {
       setIsLoading(true);
-      await login({ email: email.trim(), password });
+      await register({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+        password_confirmation: confirmPassword,
+      });
     } catch (error) {
       Alert.alert(
-        'Login Failed',
+        'Registration Failed',
         error instanceof Error ? error.message : 'An unexpected error occurred'
       );
     } finally {
@@ -41,8 +58,8 @@ export default function LoginScreen() {
     }
   };
 
-  const navigateToRegister = () => {
-    router.push('/register');
+  const navigateToLogin = () => {
+    router.back();
   };
 
   return (
@@ -61,7 +78,21 @@ export default function LoginScreen() {
         </View>
 
         <View style={styles.formContainer}>
-          <Text style={styles.title}>SIGN IN</Text>
+          <Text style={styles.title}>SIGN UP</Text>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Name</Text>
+            <TextInput
+              style={styles.input}
+              value={name}
+              onChangeText={setName}
+              placeholder="Enter your name"
+              placeholderTextColor="rgba(255, 255, 255, 0.7)"
+              autoCapitalize="words"
+              autoCorrect={false}
+              editable={!isLoading}
+            />
+          </View>
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>E-mail</Text>
@@ -90,24 +121,39 @@ export default function LoginScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               editable={!isLoading}
-              onSubmitEditing={handleLogin}
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Confirm Password</Text>
+            <TextInput
+              style={styles.input}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              placeholder="Confirm your password"
+              placeholderTextColor="rgba(255, 255, 255, 0.7)"
+              secureTextEntry
+              autoCapitalize="none"
+              autoCorrect={false}
+              editable={!isLoading}
+              onSubmitEditing={handleRegister}
             />
           </View>
 
           <TouchableOpacity 
-            style={[styles.signInButton, isLoading && styles.signInButtonDisabled]} 
+            style={[styles.signUpButton, isLoading && styles.signUpButtonDisabled]} 
             activeOpacity={0.8}
-            onPress={handleLogin}
+            onPress={handleRegister}
             disabled={isLoading}>
-            <Text style={styles.signInButtonText}>
-              {isLoading ? 'SIGNING IN...' : 'SIGN IN'}
+            <Text style={styles.signUpButtonText}>
+              {isLoading ? 'CREATING ACCOUNT...' : 'SIGN UP'}
             </Text>
           </TouchableOpacity>
 
-          <View style={styles.signUpContainer}>
-            <Text style={styles.signUpText}>Don't have an account? </Text>
-            <TouchableOpacity activeOpacity={0.7} onPress={navigateToRegister}>
-              <Text style={styles.signUpLink}>Sign up</Text>
+          <View style={styles.signInContainer}>
+            <Text style={styles.signInText}>Already have an account? </Text>
+            <TouchableOpacity activeOpacity={0.7} onPress={navigateToLogin}>
+              <Text style={styles.signInLink}>Sign in</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -166,7 +212,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     minHeight: 56,
   },
-  signInButton: {
+  signUpButton: {
     backgroundColor: Colors.warning,
     borderRadius: 12,
     paddingVertical: 16,
@@ -176,25 +222,25 @@ const styles = StyleSheet.create({
     minHeight: 56,
     justifyContent: 'center',
   },
-  signInButtonDisabled: {
+  signUpButtonDisabled: {
     backgroundColor: Colors.mutedText,
   },
-  signInButtonText: {
+  signUpButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#FFFFFF',
     letterSpacing: 1,
   },
-  signUpContainer: {
+  signInContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  signUpText: {
+  signInText: {
     fontSize: 16,
     color: Colors.darkText,
   },
-  signUpLink: {
+  signInLink: {
     fontSize: 16,
     color: Colors.info,
     fontWeight: '600',
